@@ -246,7 +246,7 @@ function send_text(content) {
         var activeTabId = tabs[0].id;
         $.ajax({
           type: 'POST',
-          url: "http://35.202.53.93:5000/summary",
+          url: "http://34.68.63.175:5000/summary",
           data: {'content':  strip(content)},
           //or your custom data either as object {foo: "bar", ...} or foo=bar&...
           success: function(response) { parse_result(response, activeTabId); },
