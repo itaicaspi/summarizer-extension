@@ -102,10 +102,10 @@ var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 
 var url = location.href;
-
+console.log(url)
 var filteredSites = ['gmail.com', 'cnn.com', 'businessinsider.com', 'newyorker.com', 'medium.com', 'jpost.com',
-                     'forbes.com', 'gizmodo.com', 'wikipedia.ord', 'bloomberg.com', 'yahoo.com', 'popsci.com',
-                     'techcrunch.com'];
+                     'forbes.com', 'gizmodo.com', 'wikipedia.org', 'bloomberg.com', 'yahoo.com', 'popsci.com',
+                     'techcrunch.com', "latimes.com", "nytimes.com"];
 
 var parseWebsite = false;
 for (var siteIdx in filteredSites) {
