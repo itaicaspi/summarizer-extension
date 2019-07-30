@@ -97,15 +97,28 @@ ref.parentNode.insertBefore(style, ref);
 var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 
-var filteredSitesByName = ['CNN', 'Business Insider', 'The New Yorker', 'Medium', 'The Jerusalem Post | JPost.com', 'Forbes', 'Gizmodo', 'Bloomberg.com'];
-var filteredSitesByTitle = ['Yahoo', 'Wikipedia'];
-var parseWebsite = 'siteName' in article && filteredSitesByName.indexOf(article['siteName']) >= 0;
-console.log(article)
-for (var siteIdx in filteredSitesByTitle) {
-  if ('title' in article && article['title'].includes(filteredSitesByTitle[siteIdx])) {
+var url = location.href;
+
+var filteredSites = ['gmail.com', 'cnn.com', 'businessinsider.com', 'newyorker.com', 'medium.com', 'jpost.com',
+                     'forbes.com', 'gizmodo.com', 'wikipedia.ord', 'bloomberg.com', 'yahoo.com', 'popsci.com',
+                     'techcrunch.com'];
+
+var parseWebsite = false;
+for (var siteIdx in filteredSites) {
+  if (url.includes(filteredSites[siteIdx])) {
     parseWebsite = true;
   }
 }
+
+// var filteredSitesByName = ['CNN', 'Business Insider', 'The New Yorker', 'Medium', 'The Jerusalem Post | JPost.com', 'Forbes', 'Gizmodo', 'Bloomberg.com'];
+// var filteredSitesByTitle = ['Yahoo', 'Wikipedia'];
+// var parseWebsite = 'siteName' in article && filteredSitesByName.indexOf(article['siteName']) >= 0;
+// console.log(article)
+// for (var siteIdx in filteredSitesByTitle) {
+//   if ('title' in article && article['title'].includes(filteredSitesByTitle[siteIdx])) {
+//     parseWebsite = true;
+//   }
+// }
 console.log(parseWebsite, 'Parse Website')
 if (parseWebsite) {
   port.postMessage({'article': article});
