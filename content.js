@@ -22,9 +22,9 @@ chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg, sendingPort) {
     // updateTabLastUpdated(sendingPort.sender.tab.id, undefined, sendingPort.sender.tab.url);
     // updateInteractionTime();
-    console.log("background connected on port " + sendingPort + " with message " + msg)
+    // console.log("background connected on port " + sendingPort + " with message " + msg)
   });
-  console.log("onConnect");
+  // console.log("onConnect");
 });
 
 
@@ -102,12 +102,12 @@ var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
 
 var url = location.href;
-console.log(url)
+// console.log(url)
 var filteredSites = ['gmail.com', 'cnn.com', 'businessinsider.com', 'newyorker.com', 'medium.com', 'jpost.com',
                      'forbes.com', 'gizmodo.com', 'wikipedia.org', 'bloomberg.com', 'yahoo.com', 'popsci.com',
                      'techcrunch.com', "latimes.com", "nytimes.com"];
 
-var parseWebsite = false;
+var parseWebsite = true;
 for (var siteIdx in filteredSites) {
   if (url.includes(filteredSites[siteIdx])) {
     parseWebsite = true;
@@ -123,7 +123,7 @@ for (var siteIdx in filteredSites) {
 //     parseWebsite = true;
 //   }
 // }
-console.log(parseWebsite, 'Parse Website')
+// console.log(parseWebsite, 'Parse Website')
 if (parseWebsite) {
   port.postMessage({'article': article});
   var div = document.createElement( 'div' );

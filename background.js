@@ -37,7 +37,7 @@ function getDomain(url) {
   try {
     return new URL(url).hostname;
   } catch (e) {
-    console.log(url);
+    // console.log(url);
     return undefined;
   }
 }
@@ -176,9 +176,9 @@ function strip(html) {
 }
 
 function parse_url(url) {
-  console.log(url);
+  // console.log(url);
   Mercury.parse(url).then(result => {
-    console.log(result);
+    // console.log(result);
     $("#name").val(strip(result['content']));
   });
 }
@@ -230,7 +230,7 @@ function create_summarization_bullets(response, threshold, maxBullets) {
 }
 
 function parse_result(response, activeTabId) {
-  console.log(response);
+  // console.log(response);
   $("body").append("<div id=\"result\" name=\"result\"></div>");
   // var result = create_marked_text(response);
   var result = create_summarization_bullets(response, 0.2, 4);
@@ -238,7 +238,7 @@ function parse_result(response, activeTabId) {
 }
 
 function send_text(content) {
-  console.log(content);
+  // console.log(content);
   // console.log(strip(content).toString())
   chrome.tabs.query({currentWindow: true, active : true},
     function(tabs){
@@ -269,21 +269,21 @@ chrome.tabs.onCreated.addListener((tab) => {
   // chrome.storage.local.get('maxTimeToKeepTabWithoutInteraction', result => {
   //   maxTimeToKeepTabWithoutInteraction = parseInt(result.maxTimeToKeepTabWithoutInteraction) * min;
   // });
-  console.log("onCreated");
+  // console.log("onCreated");
   // Mercury.parse().then(result => {
   //   console.log(result);
   // });
 });
 
 chrome.webNavigation.onCompleted.addListener((tab) => {
-  console.log("onCompleted");
+  // console.log("onCompleted");
 })
 
 chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
   // updateTabLastUpdated(tabId, undefined, tab.url);
   // updateInteractionTime();
-  console.log("onUpdated");
-  console.log(changeInfo.status);
+  // console.log("onUpdated");
+  // console.log(changeInfo.status);
   if (changeInfo.status === "complete") {
     chrome.tabs.sendMessage(tabId, {action: "get_document"}, function(response) {});
     // var article = new Readability(document).parse();
@@ -298,7 +298,7 @@ chrome.tabs.onUpdated.addListener((tabId, changeInfo, tab) => {
 chrome.tabs.onRemoved.addListener((tabId, removeInfo) => {
   // tabRemoved(tabId);
   // updateInteractionTime();
-  console.log("onRemoved");
+  // console.log("onRemoved");
 });
 
 
@@ -308,20 +308,20 @@ chrome.tabs.onActivated.addListener((activeInfo) => {
   //   updateTabLastUpdated(activeInfo.tabId, undefined, result[0].url);
   // });
   // updateInteractionTime();
-  console.log("onActivated");
+  // console.log("onActivated");
 });
 
 chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg, sendingPort) {
     // updateTabLastUpdated(sendingPort.sender.tab.id, undefined, sendingPort.sender.tab.url);
     // updateInteractionTime();
-    console.log("connected on port " + sendingPort + " with message " + msg);
-    console.log(msg);
+    // console.log("connected on port " + sendingPort + " with message " + msg);
+    // console.log(msg);
     if ('article' in msg) {
       send_text(msg['article']['content']);
     }
 
   });
-  console.log("onConnect");
+  // console.log("onConnect");
 
 });

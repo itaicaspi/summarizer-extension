@@ -1,6 +1,6 @@
 {
-  "name": "summarizer",
-  "version": "1.0",
+  "name": "sharp",
+  "version": "0.0.0.1",
   "description": "",
   "permissions": ["activeTab", "declarativeContent", "storage", "tabs", "webNavigation"],
   "background": {
@@ -15,10 +15,7 @@
   "browser_action": {
     "default_popup": "popup.html",
     "default_icon": {
-      "16": "images/fold16.png",
-      "32": "images/fold32.png",
-      "48": "images/fold48.png",
-      "128": "images/fold128.png"
+      "128": "images/sharp128.png"
     }
   },
   "content_scripts": [
@@ -32,10 +29,7 @@
     }
   ],
   "icons": {
-    "16": "images/fold16.png",
-    "32": "images/fold32.png",
-    "48": "images/fold48.png",
-    "128": "images/fold128.png"
+    "128": "images/sharp128.png"
   },
   "options_page": "options.html",
   "manifest_version": 2
