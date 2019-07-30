@@ -59,6 +59,8 @@ style.innerHTML =
   // "}" +
   "#title {" +
     "margin-bottom: 10px;" +
+    "font-size: 24px;" +
+    "font-family: Sans-serif;" + 
   "}" +
   "#summary {" +
     "border-left: 4px solid rgba(49, 162, 214, 1);" +
