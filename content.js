@@ -60,7 +60,7 @@ style.innerHTML =
   "#title {" +
     "margin-bottom: 10px;" +
     "font-size: 24px;" +
-    "font-family: Sans-serif;" + 
+    "font-family: Sans-serif;" +
   "}" +
   "#summary {" +
     "border-left: 4px solid rgba(49, 162, 214, 1);" +
@@ -68,6 +68,8 @@ style.innerHTML =
     "margin-bottom: 10px;" +
     "position: relative;" +
     "left: 50px;" +
+    "font-size: 16px;" +
+    "font-family: Sans-serif;" +
   "}" +
   "#title,#summary {" +
     "visibility: hidden;" +
