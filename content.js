@@ -28,10 +28,6 @@ chrome.runtime.onConnect.addListener(function(port) {
 });
 
 
-var div = document.createElement( 'div' );
-div.setAttribute("id", "result");
-div.setAttribute("name", "result");
-
 
 var style = document.createElement('style');
 style.innerHTML =
@@ -44,7 +40,7 @@ style.innerHTML =
     "z-index: 1000;" +
     "background: rgba(49, 162, 214, 1);" +
     "border-radius: 5px;" +
-    "transition: all 1s;" +
+    "transition: all 0.5s;" +
     "transition-delay: 0.3s;" +
     "box-shadow: 0px 10px 39px -22px rgba(0,0,0,0.7);" +
     "overflow: hidden;" +
@@ -55,7 +51,7 @@ style.innerHTML =
     "height: auto;" +
     "background: white;" +
     "padding: 20px;" +
-    "transition: all 1s;" +
+    "transition: all 0.5s;" +
     "transition-delay: 0s;" +
     "overflow-y: auto;" +
   "}" +
@@ -82,39 +78,42 @@ style.innerHTML =
     "visibility: visible;" +
     "opacity: 1;" +
     "transition: all 0.3s;" +
-    "transition-delay: 0.8s;" +
+    "transition-delay: 0.3s;" +
   "}" +
   "#result:hover > #summary {" +
     "visibility: visible;" +
     "opacity: 1;" +
     "transition: all 0.3s;" +
-    "transition-delay: 0.8s;" +
+    "transition-delay: 0.1s;" +
     "left: 0;" +
   "}";
 
 var ref = document.querySelector('script');
 ref.parentNode.insertBefore(style, ref);
 
-// div.style.backgroundColor = 'red';
-// div.style.position = "fixed";
-// div.style.left = "10px";
-// div.style.top = "200px";
-// div.style.width = "400px";
-// div.style.height = "400px";
-// div.style.zIndex = "1000";
-// div.style.background = "white";
-// div.style.borderRadius = "5px";
-// div.style.boxShadow = "0px 10px 39px -22px rgba(0,0,0,0.7)";
-// div.style.padding = "20px";
-document.body.prepend( div );
 
 // div.appendChild("<h4>Hello WOrld</h4>")
 
 var documentClone = document.cloneNode(true);
 var article = new Readability(documentClone).parse();
-port.postMessage({'article': article});
 
-
-var title = $("<h4 id='title'>" + article.title + "</h4>").appendTo("#result")
+var filteredSitesByName = ['CNN', 'Business Insider', 'The New Yorker', 'Medium', 'The Jerusalem Post | JPost.com', 'Forbes', 'Gizmodo', 'Bloomberg.com'];
+var filteredSitesByTitle = ['Yahoo', 'Wikipedia'];
+var parseWebsite = 'siteName' in article && filteredSitesByName.indexOf(article['siteName']) >= 0;
+console.log(article)
+for (var siteIdx in filteredSitesByTitle) {
+  if ('title' in article && article['title'].includes(filteredSitesByTitle[siteIdx])) {
+    parseWebsite = true;
+  }
+}
+console.log(parseWebsite, 'Parse Website')
+if (parseWebsite) {
+  port.postMessage({'article': article});
+  var div = document.createElement( 'div' );
+  div.setAttribute("id", "result");
+  div.setAttribute("name", "result");
+  document.body.prepend( div );
+  var title = $("<h4 id='title'>" + article.title + "</h4>").appendTo("#result")
 // $("#result").append("<h4>" + article.title + "</h4>");
+}
 

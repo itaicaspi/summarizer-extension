@@ -195,43 +195,66 @@ function create_marked_text(response) {
   return result;
 }
 
-function create_summarization_bullets(response, threshold) {
+function get_threshold(scores, maxBullets, lowestThreshold) {
+  var sortedScores = [...scores].sort().reverse();
+  var thresholdOfNthSentence = sortedScores[Math.min(maxBullets, sortedScores.length)];
+  var selectedThreshold = Math.max(lowestThreshold, thresholdOfNthSentence);
+  return selectedThreshold;
+}
+
+function create_summarization_bullets(response, threshold, maxBullets) {
   var result = "";
-  // result += "<ul id=\"summary\">";
+
+  // get all the scores
+  var scores = [];
+  for (var line in response) {
+    var subparts = response[line].split(": ");
+    var score = parseFloat(subparts[0]);
+    scores.push(score);
+  }
+
+  // select the score that is at least 0.2 but extracts a maximum of maxBullets
+  var selectedThreshold = get_threshold(scores, maxBullets, 0.2);
+
+  // extract the relevant sentences according to the threshold
   for (var line in response) {
     var subparts = response[line].split(": ");
     var score = parseFloat(subparts[0]);
     var text = subparts[1];
-    if (score > threshold) {
+    if (score > selectedThreshold) {
       result += "<div id=\"summary\">" + text + "</div>";
     }
   }
-  // result += "</ul>";
+
   return result;
 }
 
-function parse_result(response) {
+function parse_result(response, activeTabId) {
   console.log(response);
   $("body").append("<div id=\"result\" name=\"result\"></div>");
   // var result = create_marked_text(response);
-  var result = create_summarization_bullets(response, 0.2);
-  chrome.tabs.query({active: true, currentWindow: true}, function(tabs){
-    chrome.tabs.sendMessage(tabs[0].id, {action: "open_dialog_box", content: result}, function(response) {});
-  });
-  // alert($("#result").val())
-
+  var result = create_summarization_bullets(response, 0.2, 4);
+  chrome.tabs.sendMessage(activeTabId, {action: "open_dialog_box", content: result}, function(response) {});
 }
 
 function send_text(content) {
   console.log(content);
   // console.log(strip(content).toString())
-  $.ajax({
-    type: 'POST',
-    url: "http://35.226.246.206:5000/summary",
-    data: {'content':  strip(content)},
-    //or your custom data either as object {foo: "bar", ...} or foo=bar&...
-    success: function(response) { parse_result(response); },
-  });
+  chrome.tabs.query({currentWindow: true, active : true},
+    function(tabs){
+      if (tabs[0]) {
+        var activeTabId = tabs[0].id;
+        $.ajax({
+          type: 'POST',
+          url: "http://35.202.53.93:5000/summary",
+          data: {'content':  strip(content)},
+          //or your custom data either as object {foo: "bar", ...} or foo=bar&...
+          success: function(response) { parse_result(response, activeTabId); },
+        });
+      }
+    }
+  );
+
 }
 
 chrome.tabs.onCreated.addListener((tab) => {
@@ -292,11 +315,12 @@ chrome.runtime.onConnect.addListener(function(port) {
   port.onMessage.addListener(function(msg, sendingPort) {
     // updateTabLastUpdated(sendingPort.sender.tab.id, undefined, sendingPort.sender.tab.url);
     // updateInteractionTime();
-    console.log("connected on port " + sendingPort + " with message " + msg)
-    console.log(msg)
+    console.log("connected on port " + sendingPort + " with message " + msg);
+    console.log(msg);
     if ('article' in msg) {
       send_text(msg['article']['content']);
     }
+
   });
   console.log("onConnect");
 
